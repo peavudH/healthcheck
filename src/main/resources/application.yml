@@ -1,0 +1,38 @@
+
+spring:
+  application:
+    name: fireinfo_healthcheck
+
+ # jpa:
+  #  hibernate:
+  #    ddl-auto: none
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/firedb
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+    user: admin
+    password: admin
+
+#虚拟网关IP、端口和传输内容
+firevgw:
+  serviceHost: localhost
+  port: 12346
+  message: currentMode
+
+#数据库
+mysql:
+  sql: SELECT username FROM userinfo WHERE username = 'admin'
+  expectResult: admin
+
+#web服务器
+web:
+  requestUrl: http://localhost:8080/fireinfo/user/login.do
+
+server:
+  port: 8090
+
