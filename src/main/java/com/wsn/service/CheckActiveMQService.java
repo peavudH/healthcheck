@@ -1,35 +1,44 @@
 package com.wsn.service;
 
-import com.wsn.entity.CheckActiveMQMessage;
-import org.apache.activemq.ActiveMQConnectionFactory;
+import com.wsn.untils.MQConsumer;
+import com.wsn.untils.MQProducer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.jms.*;
-import java.util.Map;
+import javax.jms.Destination;
 
 /**
- * Created by Lenovo on 2017/8/19.
+ * Created with IntelliJ IDEA.
+ * User: Lenovo
+ * Date: 2017/9/2
+ * Time: 9:49
+ * Description:
  */
 @Service
-public class CheckActiveMQService implements CommandLineRunner{
+public class CheckActiveMQService {
+
+
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private MQProducer mqProducer;
+    @Autowired
+    private MQConsumer mqConsumer;
 
-
-    @Override
-    public void run(String... strings) throws Exception {
-        jmsTemplate.send("fireinfohealthcheck",new CheckActiveMQMessage());
+    /**
+     * 发送检查消息
+     * @param destination
+     * @param message
+     */
+    public void sendCheckMQMessage(Destination destination, String message) {
+        mqProducer.sendMessage(destination,message);
     }
 
-    @JmsListener(destination = "fireinfohealthcheck")
-    public boolean receiveMessage(String message) {
-        if (message != null && message.equals("ActiveMQ service is health!")) {
-            return true;
-        }
-        return false;
+    /**
+     * 根据返回的获取的消息判断
+     * @param expecteds
+     * @return
+     */
+    public boolean judgeIsHealth(String expecteds) {
+        return mqConsumer.judgeIsHealth(expecteds);
     }
+
 }
