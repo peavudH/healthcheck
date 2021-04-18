@@ -31,6 +31,9 @@ spring:
           required: true
     port: 25
 
+  thymeleaf:
+    cache: false
+
 
 #虚拟网关IP、端口和传输内容
 firevgw:
