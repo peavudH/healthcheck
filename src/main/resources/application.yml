@@ -3,11 +3,6 @@ spring:
   application:
     name: fireinfo_healthcheck
 
-
- # jpa:
-  #  hibernate:
-  #    ddl-auto: none
-
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/firedb
     username: root
@@ -22,6 +17,20 @@ spring:
 
   jms:
     pub-sub-domain: true
+
+  mail:
+    host: smtp.163.com
+    username: m15821998331@163.com
+    password: usa911
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
+          required: true
+    port: 25
+
 
 #虚拟网关IP、端口和传输内容
 firevgw:
@@ -43,6 +52,12 @@ mq:
   topicName: fireinfohealthcheck
   message:  ActiveMQ service is health!
 
+#接收邮箱
+mail:
+  username: 745729377@qq.com
+
 server:
   port: 8090
+
+
 

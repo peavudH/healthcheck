@@ -1,7 +1,7 @@
 package com.wsn.controller;
 
 import com.wsn.service.CheckActiveMQService;
-import com.wsn.untils.MQProducer;
+import com.wsn.untils.SendSimpleEmail;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -28,7 +28,7 @@ public class CheckActiveMQController {
     @Autowired
     private CheckActiveMQService checkActiveMQService;
     @Autowired
-    private MQProducer mqProducer;
+    private SendSimpleEmail simpleEmail;
 
     @PostMapping("/checkactivemq")
     public Map<String, Object> checkActiveMQ() {
@@ -39,12 +39,17 @@ public class CheckActiveMQController {
         String mqUrl = environment.getProperty("spring.activemq.broker-url");
         String serviceHost = mqUrl.substring(mqUrl.indexOf("//") + 2, mqUrl.lastIndexOf(":"));
         String port = mqUrl.substring(mqUrl.lastIndexOf(":") + 1,mqUrl.length());
+        String subject = "ActiveMQ server exception";//异常邮件主题
+        //String text = new StringBuffer(serviceHost).append("is exception").toString();//异常邮件内容
         Destination destination = new ActiveMQTopic(topicName);
         //发送检查消息
         checkActiveMQService.sendCheckMQMessage(destination,message);
         //从消息队列获取并判断
-        boolean healthResult = checkActiveMQService.judgeIsHealth(message);
-        map.put("result",healthResult);//检查结果
+        boolean result = checkActiveMQService.judgeIsHealth(message);
+        if (!result) {
+            simpleEmail.sendSimpleEmail(subject,serviceHost);
+        }
+        map.put("result",result);//检查结果
         map.put("serviceHost", serviceHost);//ip地址
         map.put("port", port);//端口
         return map;
