@@ -32,7 +32,7 @@ public class SendSimpleEmail {
     @Autowired
     private SpringTemplateEngine templateEngine;
 
-    public void sendSimpleEmail(String subject,String serviceHost) {
+    public void sendSimpleEmail(String subject,String text) throws Exception{
         String toMailAccountStr = environment.getProperty("mail.username");
         String[] toMailAccounts = toMailAccountStr.split(",");
         String fromMailAccount = environment.getProperty("spring.mail.username");
@@ -43,7 +43,7 @@ public class SendSimpleEmail {
             mimeMessageHelper.setTo(toMailAccounts);
             mimeMessageHelper.setSubject(subject);
             Map<String, Object> parameters = new HashMap<>();//动态
-            parameters.put("serviceHost", serviceHost);
+            parameters.put("text", text);
 
             Context context = new Context();
             for (Map.Entry<String, Object> parameter : parameters.entrySet()) {
@@ -57,6 +57,7 @@ public class SendSimpleEmail {
             LOGGER.info("Mail sent successfully");
         } catch (Exception e) {
             LOGGER.error("E-mail failed to send");
+            throw e;
         }
     }
 

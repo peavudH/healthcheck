@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
 
   activemq:
-    broker-url: tcp://127.0.0.1:61616
+    broker-url: tcp://192.168.18.10:61616
     user: admin
     password: admin
     in-memory: true
@@ -34,7 +34,7 @@ spring:
 
 #虚拟网关IP、端口和传输内容
 firevgw:
-  serviceHost: 127.0.0.1
+  serviceHost: 192.168.18.116
   port: 12346
   message: currentMode
 
