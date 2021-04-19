@@ -64,7 +64,7 @@ server:
   port: 8090
 
 #服务器平台
-service:
-  name: 美团云各服务器运行状态
+platform:
+  name: 美团云
 
 
