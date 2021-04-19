@@ -4,15 +4,15 @@ spring:
     name: fireinfo_healthcheck
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/firedb
-    username: root
-    password: root
+    url: jdbc:mysql://43.241.214.218:6033/firedb
+    username: firefighting
+    password: firefighting
     driver-class-name: com.mysql.jdbc.Driver
 
   activemq:
-    broker-url: tcp://192.168.18.10:61616
+    broker-url: tcp://101.236.44.31:61616
     user: admin
-    password: admin
+    password: )OKM(ijn
     in-memory: true
 
   jms:
@@ -37,7 +37,7 @@ spring:
 
 #虚拟网关IP、端口和传输内容
 firevgw:
-  serviceHost: 192.168.18.116
+  serviceHost: 101.236.42.190
   port: 12346
   message: currentMode
 
@@ -48,7 +48,7 @@ mysql:
 
 #web服务器
 web:
-  requestUrl: http://127.0.0.1:8080/fireinfo/user/login.do
+  requestUrl: http://101.236.44.31:8080/fireinfo/user/login.do
 
 #mq服务器
 mq:
@@ -59,8 +59,12 @@ mq:
 mail:
   username: 745729377@qq.com
 
+#应用端口
 server:
   port: 8090
 
+#服务器平台
+service:
+  name: 美团云各服务器运行状态
 
 
