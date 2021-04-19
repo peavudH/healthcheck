@@ -24,6 +24,7 @@ import java.util.List;
  * Description:
  */
 @Controller
+@RequestMapping("/healthcheck")
 public class CheckAllServiceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckAllServiceController.class);
 
