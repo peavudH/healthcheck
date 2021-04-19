@@ -60,22 +60,6 @@ public class CheckAllServiceController {
         return "index";
     }
 
-    @RequestMapping("/ajaxrequest")
-    public List<CustomResponse> ajaxrequest() {
-        List<CustomResponse> list = new ArrayList<>();
-        try {
-            checkService(list);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            try {
-                sendSimpleEmail.sendSimpleEmail("healthCheck is exception",e.toString());
-            } catch (Exception ex) {
-                LOGGER.error(ex.getMessage());
-            }
-        }
-        return list;
-    }
-
 
     /**
      * 检查服务器
