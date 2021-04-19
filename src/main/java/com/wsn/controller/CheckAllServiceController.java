@@ -9,6 +9,7 @@ import com.wsn.untils.SendSimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,8 @@ public class CheckAllServiceController {
     private CheckActiveMQService checkActiveMQService;
     @Autowired
     private CheckFireVgwService checkFireVgwService;
+    @Autowired
+    private Environment environment;
 
     @RequestMapping("/checkallservice")
     public String checkAllService(ModelMap model) {
@@ -45,7 +48,7 @@ public class CheckAllServiceController {
         try {
             checkService(list);
             model.addAttribute("list", list);
-            model.addAttribute("name", "momo");
+            model.addAttribute("ServiceName", environment.getProperty("service.name"));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             try {
