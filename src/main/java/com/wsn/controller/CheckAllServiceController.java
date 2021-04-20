@@ -48,7 +48,7 @@ public class CheckAllServiceController {
         try {
             checkService(list);
             model.addAttribute("list", list);
-            model.addAttribute("ServiceName", environment.getProperty("service.name"));
+            model.addAttribute("platformName", environment.getProperty("platform.name"));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             try {
