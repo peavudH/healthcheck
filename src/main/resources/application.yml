@@ -67,4 +67,10 @@ server:
 platform:
   name: 美团云
 
+#日志相关
+logging:
+  file: F:\\healthcheck\\log\\healthcheck.log
+
+
+
 
