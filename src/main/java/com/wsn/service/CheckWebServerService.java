@@ -34,20 +34,20 @@ public class CheckWebServerService {
     public CustomResponse requestFireinfoUrl() throws Exception{
         boolean result =false;
         CustomResponse customResponse = new CustomResponse();
+        String platformName = environment.getProperty("platform.name");//服务器所属平台
+        String webServerUrl = environment.getProperty("web.requestUrl");
+        String serviceHostAndPort = webServerUrl.split("/")[2];
+        String serviceHost = serviceHostAndPort.split(":")[0];
+        String subject = "WEB server exception";//异常邮件主题
         try {
-            String webServerUrl = environment.getProperty("web.requestUrl");
-            String serviceHostAndPort = webServerUrl.split("/")[2];
-            String serviceHost = serviceHostAndPort.split(":")[0];
             String port = serviceHostAndPort.split(":")[1];
-            String subject = "WEB server exception";//异常邮件主题
-            String text = new StringBuffer(serviceHost).append(" is exception").toString();//异常邮件内容
             HttpResponse response = this.sendPost(webServerUrl);
             if (null != response && response.getStatusLine().getStatusCode() == 200) {
                 result = true;
             }
             if (!result) {
                 LOGGER.warn("WEB server is exception,Is now ready to send a notification message!");
-                simpleEmail.sendSimpleEmail(subject, text);
+                simpleEmail.sendTemplateEmail(subject, platformName,serviceHost,"WEB");
             }
             customResponse.setPort(port);
             customResponse.setResult(result);
@@ -55,7 +55,7 @@ public class CheckWebServerService {
             customResponse.setServerName("WEB");
         } catch (Exception e) {
             LOGGER.error("Verify that the WEB server has an exception");
-            throw e;
+            simpleEmail.sendTemplateEmail(subject, platformName,serviceHost,"WEB");
         }
         return customResponse;
     }

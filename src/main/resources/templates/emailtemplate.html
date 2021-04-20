@@ -1,9 +1,15 @@
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
 <h3>系统管理员，你好：</h3>
-<h4 th:text="${text}"></h4>
+<div>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${platformName}"></span>
+    <span th:text="${serverName}"></span>
+    <span>服务器【</span>
+    <span th:text="${serviceHost}"></span>
+    <span>】出现异常，请及时解决！</span>
+</div>
 </body>
 </html>

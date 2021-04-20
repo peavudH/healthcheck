@@ -7,7 +7,10 @@
 </head>
 <body>
     <center style="padding-top: 4%">
-        <div style="font-size: large;padding-bottom: 2%" th:text="${ServiceName}"></div>
+        <div >
+            <span style="font-size: large;padding-bottom: 2%" th:text="${platformName}"></span>
+            <span style="font-size: large;padding-bottom: 2%">各服务器运行状态</span>
+        </div>
         <div align="right" style="width: 50%;padding-bottom: 1%"><button id="refresh">刷新</button></div>
         <table id="generatedTable" align="center" border="1" cellpadding="0" cellspacing="0" width="50%" >
             <thead>

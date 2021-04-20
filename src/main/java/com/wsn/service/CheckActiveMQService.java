@@ -53,25 +53,25 @@ public class CheckActiveMQService {
      * 根据返回的获取的消息判断
      * @return
      */
-    public CustomResponse judgeIsHealth() throws Exception{
+    public CustomResponse judgeIsHealth() throws Exception {
         CustomResponse customResponse = new CustomResponse();
-        boolean result = false;
+        boolean result;
+        String mqUrl = environment.getProperty("spring.activemq.broker-url");
+        String platformName = environment.getProperty("platform.name");//服务器所属平台
+        String serviceHost = mqUrl.substring(mqUrl.indexOf("//") + 2, mqUrl.lastIndexOf(":"));
+        String subject = "ActiveMQ server exception";//异常邮件主题
         try {
             String topicName = environment.getProperty("mq.topicName");
             String message = environment.getProperty("mq.message");
             //MQ服务器的IP地址
-            String mqUrl = environment.getProperty("spring.activemq.broker-url");
-            String serviceHost = mqUrl.substring(mqUrl.indexOf("//") + 2, mqUrl.lastIndexOf(":"));
             String port = mqUrl.substring(mqUrl.lastIndexOf(":") + 1, mqUrl.length());
-            String subject = "ActiveMQ server exception";//异常邮件主题
-            String text = new StringBuffer(serviceHost).append(" is exception").toString();//异常邮件内容
             Destination destination = new ActiveMQTopic(topicName);
             //发送检查消息
             result = this.sendCheckMQMessage(destination, message);
             //如果发送消息出现异常，则直接发送异常邮件
             if (!result) {
                 LOGGER.warn("MQ server is exception,Is now ready to send a notification message!");
-                simpleEmail.sendSimpleEmail(subject, text);
+                simpleEmail.sendTemplateEmail(subject, platformName,serviceHost,"MQ");
             }
             //当发送成功后，再判断是否能正常接收
             else {
@@ -79,7 +79,7 @@ public class CheckActiveMQService {
                 result = mqConsumer.judgeIsHealth(message);
                 if (!result) {
                     LOGGER.warn("MQ server is exception,Is now ready to send a notification message!");
-                    simpleEmail.sendSimpleEmail(subject, text);
+                    simpleEmail.sendTemplateEmail(subject, platformName,serviceHost,"MQ");
                 }
             }
             customResponse.setServerName("MQ");
@@ -88,7 +88,7 @@ public class CheckActiveMQService {
             customResponse.setResult(result);
         } catch (Exception e) {
             LOGGER.error("Verify that the MQ server has an exception");
-            throw e;
+            simpleEmail.sendTemplateEmail(subject, platformName,serviceHost,"MQ");
         }
         return customResponse;
     }

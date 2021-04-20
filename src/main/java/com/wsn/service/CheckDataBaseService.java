@@ -23,17 +23,19 @@ public class CheckDataBaseService {
     @Autowired
     private SendSimpleEmail simpleEmail;
 
-    public CustomResponse checkDataBase() throws Exception{
+    public CustomResponse checkDataBase() throws Exception {
         boolean result = false;
         CustomResponse customResponse = new CustomResponse();
+        String jdbcUrl = environment.getProperty("spring.datasource.url");
+        String platformName = environment.getProperty("platform.name");//服务器所属平台
+        String serviceHostAndPort = jdbcUrl.substring(jdbcUrl.indexOf("//") + 2, jdbcUrl.lastIndexOf("/"));
+        String serviceHost = serviceHostAndPort.split(":")[0];
+        String port = serviceHostAndPort.split(":")[1];
+        String subject = "DataBase server exception";//异常邮件主题
+        customResponse.setServiceHost(serviceHost);
+        customResponse.setServerName("数据库");
+        customResponse.setPort(port);
         try {
-            String jdbcUrl = environment.getProperty("spring.datasource.url");
-            String serviceHostAndPort = jdbcUrl.substring(jdbcUrl.indexOf("//") + 2, jdbcUrl.lastIndexOf("/"));
-            String serviceHost = serviceHostAndPort.split(":")[0];
-            String port = serviceHostAndPort.split(":")[1];
-            String subject = "DataBase server exception";//异常邮件主题
-            String text = new StringBuffer(serviceHost).append(" is exception").toString();//异常邮件内容
-
             String username = jdbcTemplate.queryForObject(environment.getProperty("mysql.sql"), String.class);
             if (environment.getProperty("mysql.expectResult").equals(username)) {
                 result = true;
@@ -41,16 +43,12 @@ public class CheckDataBaseService {
 
             if (!result) {
                 LOGGER.warn("DataBase server is exception,Is now ready to send a notification message!");
-                simpleEmail.sendSimpleEmail(subject, text);
+                simpleEmail.sendTemplateEmail(subject, platformName,serviceHost,"DataBase");
             }
             customResponse.setResult(result);
-            customResponse.setServiceHost(serviceHost);
-            customResponse.setServerName("数据库");
-            customResponse.setPort(port);
-
         } catch (Exception e) {
-            LOGGER.error("Verify that the DataBase server has an exception");
-            throw e;
+            LOGGER.error("Verify that the DataBase server has an exception"+e.getMessage());
+            simpleEmail.sendTemplateEmail(subject, platformName,serviceHost,"数据库");
         }
         return customResponse;
     }
